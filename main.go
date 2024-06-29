@@ -1,6 +1,7 @@
 package main
 
 import (
+	"animaya/search-engine/routes"
 	"fmt"
 	"log"
 	"os"
@@ -33,6 +34,8 @@ func main() {
 	})
 
 	app.Use(compress.New())
+
+	routes.SetRoutes(app)
 
 	go func() {
 		if err := app.Listen(port); err != nil {
