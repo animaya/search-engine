@@ -1,6 +1,7 @@
 package main
 
 import (
+	"animaya/search-engine/db"
 	"animaya/search-engine/routes"
 	"fmt"
 	"log"
@@ -34,7 +35,7 @@ func main() {
 	})
 
 	app.Use(compress.New())
-
+	db.InitDB()
 	routes.SetRoutes(app)
 
 	go func() {
