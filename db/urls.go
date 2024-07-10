@@ -81,5 +81,5 @@ func (crawled *CrawledUrl) SetIndexedTrue(urls []CrawledUrl) error {
 			return tx.Error
 		}
 	}
-
+	return nil
 }
