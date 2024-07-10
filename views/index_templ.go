@@ -42,7 +42,7 @@ func template() templ.Component {
 	})
 }
 
-func Home() templ.Component {
+func Home(amount string, searchOn bool, addNew bool) templ.Component {
 	return templruntime.GeneratedTemplate(func(templ_7745c5c3_Input templruntime.GeneratedComponentInput) (templ_7745c5c3_Err error) {
 		templ_7745c5c3_W, ctx := templ_7745c5c3_Input.Writer, templ_7745c5c3_Input.Context
 		templ_7745c5c3_Buffer, templ_7745c5c3_IsBuffer := templruntime.GetBuffer(templ_7745c5c3_W)
@@ -72,7 +72,40 @@ func Home() templ.Component {
 				}()
 			}
 			ctx = templ.InitializeContext(ctx)
-			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex flex-col justify-center items-center\"><h1 class=\"text-2xl py-5 text-center\">Welcome to Search Settings</h1><form class=\"flex flex-col justify-center items-center gap-5 py-5\" hx-post=\"/\" hx-target=\"#feedback\" hx-indicator=\"#indicator\"><label class=\"input input-bordered flex items-center gap-2 w-full\">URLs per hour: <input type=\"text\" class=\"grow\" name=\"amount\" placeholder=\"5\"></label><div class=\"flex flex-col\"><div class=\"form-control w-52\"><label class=\"label cursor-pointer\"><span class=\"label-text\">Search on:</span> <input type=\"checkbox\" class=\"toggle toggle-primary\" name=\"searchOn\" checked=\"checked\"></label></div><div class=\"form-control w-52\"><label class=\"label cursor-pointer\"><span class=\"label-text\">Add new URLs:</span> <input type=\"checkbox\" class=\"toggle toggle-secondary\" name=\"addNew\" checked=\"checked\"></label></div></div><button type=\"submit\" class=\"btn\">Submit</button></form><div id=\"indicator\" class=\"htmx-indicator\"><div class=\"flex justify-center items-center w-full\"><span class=\"loading loading-spinner loading-lg text-primary h-20  w-20\"></span></div></div><div id=\"feedback\"></div></div>")
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("<div class=\"flex flex-col justify-center items-center\"><h1 class=\"text-2xl py-5 text-center\">Welcome to Search Settings</h1><div class=\"py-5\"><button hx-post=\"/logout\" class=\"btn\">Logout</button></div><form class=\"flex flex-col justify-center items-center gap-5 py-5\" hx-post=\"/\" hx-target=\"#feedback\" hx-indicator=\"#indicator\"><label class=\"input input-bordered flex items-center gap-2 w-full\">URLs per hour: <input value=\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			var templ_7745c5c3_Var4 string
+			templ_7745c5c3_Var4, templ_7745c5c3_Err = templ.JoinStringErrs(amount)
+			if templ_7745c5c3_Err != nil {
+				return templ.Error{Err: templ_7745c5c3_Err, FileName: `views/index.templ`, Line: 36, Col: 24}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(templ.EscapeString(templ_7745c5c3_Var4))
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("\" type=\"text\" class=\"grow\" name=\"amount\" placeholder=\"5\"></label><div class=\"flex flex-col\"><div class=\"form-control w-52\"><label class=\"label cursor-pointer\"><span class=\"label-text\">Search on:</span> <input type=\"checkbox\" class=\"toggle toggle-primary\" name=\"searchOn\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if searchOn {
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" checked")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("></label></div><div class=\"form-control w-52\"><label class=\"label cursor-pointer\"><span class=\"label-text\">Add new URLs:</span> <input type=\"checkbox\" class=\"toggle toggle-secondary\" name=\"addNew\"")
+			if templ_7745c5c3_Err != nil {
+				return templ_7745c5c3_Err
+			}
+			if addNew {
+				_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString(" checked")
+				if templ_7745c5c3_Err != nil {
+					return templ_7745c5c3_Err
+				}
+			}
+			_, templ_7745c5c3_Err = templ_7745c5c3_Buffer.WriteString("></label></div></div><button type=\"submit\" class=\"btn\">Submit</button></form><div id=\"indicator\" class=\"htmx-indicator\"><div class=\"flex justify-center items-center w-full\"><span class=\"loading loading-spinner loading-lg text-primary h-20  w-20\"></span></div></div><div id=\"feedback\"></div></div>")
 			if templ_7745c5c3_Err != nil {
 				return templ_7745c5c3_Err
 			}

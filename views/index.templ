@@ -18,31 +18,35 @@ templ template() {
 </html>
 }
 
-templ Home() {
+templ Home(amount string, searchOn bool, addNew bool) {
     @template(){
       <div class="flex flex-col justify-center items-center">
       <h1 class="text-2xl py-5 text-center">Welcome to Search Settings</h1>
-<form class="flex flex-col justify-center items-center gap-5 py-5"
-    hx-post="/"
-    hx-target="#feedback"
-    hx-indicator="#indicator"
->
+
+      <div class="py-5">
+        <button hx-post="/logout" class="btn">Logout</button>
+      </div>
+      <form class="flex flex-col justify-center items-center gap-5 py-5"
+          hx-post="/"
+          hx-target="#feedback"
+          hx-indicator="#indicator"
+      >
 <label class="input input-bordered flex items-center gap-2 w-full">
   URLs per hour:
-  <input type="text" class="grow" name="amount" placeholder="5" />
+  <input  value={ amount }type="text" class="grow" name="amount" placeholder="5" />
 </label>
 
  <div class="flex flex-col">
   <div class="form-control w-52">
     <label class="label cursor-pointer">
       <span class="label-text">Search on:</span>
-      <input type="checkbox" class="toggle toggle-primary"  name="searchOn" checked="checked" />
+      <input type="checkbox" class="toggle toggle-primary"  name="searchOn" checked?={ searchOn }/>
     </label>
   </div>
   <div class="form-control w-52">
     <label class="label cursor-pointer">
       <span class="label-text">Add new URLs:</span>
-      <input type="checkbox" class="toggle toggle-secondary" name="addNew" checked="checked" />
+      <input type="checkbox" class="toggle toggle-secondary" name="addNew" checked?={ addNew }/>
     </label>
   </div>
   

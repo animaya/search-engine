@@ -3,6 +3,7 @@ package main
 import (
 	"animaya/search-engine/db"
 	"animaya/search-engine/routes"
+	"animaya/search-engine/utils"
 	"fmt"
 	"log"
 	"os"
@@ -16,6 +17,9 @@ import (
 )
 
 func main() {
+
+	fmt.Println("DATABASE_URL:", os.Getenv("DATABASE_URL"))
+	fmt.Println("SECRET_KEY:", os.Getenv("SECRET_KEY"))
 	env := godotenv.Load()
 
 	if env != nil {
@@ -37,6 +41,7 @@ func main() {
 	app.Use(compress.New())
 	db.InitDB()
 	routes.SetRoutes(app)
+	utils.StartCronJobs()
 
 	go func() {
 		if err := app.Listen(port); err != nil {

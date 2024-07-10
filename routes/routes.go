@@ -1,12 +1,12 @@
 package routes
 
 import (
-	"animaya/search-engine/views"
-	"fmt"
+	"time"
 
 	"github.com/a-h/templ"
 	"github.com/gofiber/fiber/v2"
 	"github.com/gofiber/fiber/v2/middleware/adaptor"
+	"github.com/gofiber/fiber/v2/middleware/cache"
 )
 
 func render(c *fiber.Ctx, component templ.Component, options ...func(*templ.ComponentHandler)) error {
@@ -19,37 +19,27 @@ func render(c *fiber.Ctx, component templ.Component, options ...func(*templ.Comp
 	return adaptor.HTTPHandler(componentHadler)(c)
 }
 
-type settingsform struct {
-	Amount   int  `form:"amount"`
-	SearchOn bool `form:"seachOn"`
-	AddNew   bool `form:"addNew"`
-}
-
 func SetRoutes(app *fiber.App) {
-	app.Get("/", LoginHandler)
-	app.Post("/", func(c *fiber.Ctx) error {
-		input := settingsform{}
 
-		if err := c.BodyParser(&input); err != nil {
-			return c.SendString("<h2>Error: Something went wrong</h2>")
-		}
-		fmt.Println(input)
-		return c.SendStatus(200)
+	app.Get("/login", LoginHandler)
+	app.Post("/login", LoginPostHandler)
+	app.Post("/logout", LogoutHandler)
+	// app.Get("/create", func(c *fiber.Ctx) error {
+	// 	u := &db.User{}
+	// 	u.CreateAdmin()
+	// 	return c.SendString("created")
+	// })
+	app.Post("/search", HandleSearch)
+	app.Use("/search", cache.New(cache.Config{
+		Next: func(c *fiber.Ctx) bool {
+			return c.Query("noCache") == "true"
+		},
+		Expiration:   30 * time.Minute,
+		CacheControl: true,
+	}))
 
-	})
+	app.Get("/delete-admin", DeleteAdminUserHandler)
 
-	app.Get("/login", func(c *fiber.Ctx) error {
-		return render(c, views.Login())
-	})
-
-	app.Post("/login", func(c *fiber.Ctx) error {
-		input := loginform{}
-
-		if err := c.BodyParser(&input); err != nil {
-			return c.SendString("<h2>Error: Something went wrong</h2>")
-		}
-
-		return c.SendStatus(200)
-
-	})
+	app.Get("/", AuthMiddleware, DashboardHandler)
+	app.Post("/", AuthMiddleware, DashboardPostHandler)
 }

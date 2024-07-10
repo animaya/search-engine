@@ -29,11 +29,13 @@ func InitDB() {
 		panic(err)
 	}
 
-	err = DBConn.AutoMigrate()
+	err = DBConn.AutoMigrate(&User{}, &SearchSettings{}, &CrawledUrl{}, &SearchIndex{})
 	if err != nil {
 
 		panic(err)
 	}
+
+	fmt.Println("Database connection and migration successful")
 }
 
 func GetDB() *gorm.DB {

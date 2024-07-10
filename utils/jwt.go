@@ -1,7 +1,11 @@
 package utils
 
 import (
+	"crypto/ecdsa"
+	"crypto/x509"
+	"encoding/pem"
 	"errors"
+	"fmt"
 	"os"
 	"time"
 
@@ -13,6 +17,20 @@ type AuthClaim struct {
 	User  string `json:"user"`
 	Admin bool   `json:"role"`
 	jwt.RegisteredClaims
+}
+
+func loadECDSAPrivateKey(path string) (*ecdsa.PrivateKey, error) {
+	keyData, err := os.ReadFile(path)
+	if err != nil {
+		return nil, err
+	}
+
+	block, _ := pem.Decode(keyData)
+	if block == nil || block.Type != "EC PRIVATE KEY" {
+		return nil, errors.New("failed to decode PEM block containing private key")
+	}
+
+	return x509.ParseECPrivateKey(block.Bytes)
 }
 
 func CreateNewAuthToken(id string, email string, isAdmin bool) (string, error) {
@@ -27,18 +45,17 @@ func CreateNewAuthToken(id string, email string, isAdmin bool) (string, error) {
 	}
 
 	token := jwt.NewWithClaims(jwt.SigningMethodES256, claim)
-
-	secretKey, exists := os.LookupEnv("SECRET_KEY")
-
-	if !exists {
-		panic("secret key cannot be found in .env")
+	privateKeyPath := os.Getenv("ECDSA_PRIVATE_KEY_PATH")
+	privateKey, err := loadECDSAPrivateKey(privateKeyPath)
+	if err != nil {
+		panic("failed to load ECDSA private key")
 	}
 
-	signedToke, err := token.SignedString([]byte(secretKey))
-
+	signedToken, err := token.SignedString(privateKey)
 	if err != nil {
 		return "", errors.New("error signing the token")
 	}
 
-	return signedToke, nil
+	fmt.Println("JWT Token created and signed:", signedToken)
+	return signedToken, nil
 }
